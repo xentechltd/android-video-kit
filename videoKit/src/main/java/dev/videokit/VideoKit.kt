@@ -5,6 +5,7 @@ import android.net.Uri
 import android.os.Handler
 import android.os.Looper
 import androidx.media3.common.util.UnstableApi
+import dev.videokit.internal.OutputPathResolver
 import dev.videokit.internal.VideoConverter
 import dev.videokit.internal.VideoUploader
 import kotlinx.coroutines.Dispatchers
@@ -59,16 +60,22 @@ class VideoKit {
     suspend fun convertAndUpload(
         context: Context,
         inputUri: Uri,
-        outputPath: String,
         uploadUrl: String,
+        outputPath: String? = null,
         conversionConfig: ConversionConfig = ConversionConfig.Default,
         uploadConfig: UploadConfig = UploadConfig(),
         onProgress: (Float) -> Unit = {},
     ): Result<Unit> {
-        val convertResult = convert(
+        val resolvedOutputPath = OutputPathResolver.resolveConvertOutputPath(
             context = context,
             inputUri = inputUri,
             outputPath = outputPath,
+        )
+
+        val convertResult = convert(
+            context = context,
+            inputUri = inputUri,
+            outputPath = resolvedOutputPath,
             config = conversionConfig,
             onProgress = { progress -> onProgress(progress / 2f) },
         )
@@ -77,7 +84,7 @@ class VideoKit {
         }
 
         return upload(
-            filePath = outputPath,
+            filePath = resolvedOutputPath,
             url = uploadUrl,
             config = uploadConfig,
             onProgress = { progress -> onProgress(progress / 2f + 0.5f) },

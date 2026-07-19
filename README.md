@@ -19,7 +19,7 @@ maven { url = uri("https://jitpack.io") }
 Add the dependency:
 
 ```kotlin
-implementation("com.github.xentechltd:android-video-kit:v1.0.0")
+implementation("com.github.xentechltd:android-video-kit:v1.0.1")
 ```
 
 Convert a video:
@@ -57,13 +57,14 @@ Convert and upload in one call (combined progress: 0–50% convert, 50–100% up
 val result = VideoKit().convertAndUpload(
     context = context,
     inputUri = inputUri,
-    outputPath = outputPath,
     uploadUrl = presignedPutUrl,
     conversionConfig = ConversionConfig.Default,
     uploadConfig = UploadConfig(contentType = "video/mp4"),
     onProgress = { progress -> /* 0.0–1.0 */ },
 )
 ```
+
+`outputPath` is optional. When omitted, the file is written to the app cache as `converted_{original_name}` (e.g. `converted_holiday.mp4`).
 
 Media3 APIs are marked `@UnstableApi`. Opt in where required in your app module.
 
