@@ -19,7 +19,7 @@ maven { url = uri("https://jitpack.io") }
 Add the dependency:
 
 ```kotlin
-implementation("com.github.")
+implementation("com.github.xentechltd:android-video-kit:v1.0.0")
 ```
 
 Convert a video:
